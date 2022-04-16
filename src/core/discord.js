@@ -6,9 +6,10 @@ const {
 } = require('discord-api-types/v9');
 const {
     Client,
-    Intents,
-    Permissions
+    Intents
 } = require('discord.js');
+
+
 const _ = require('lodash');
 
 const {
@@ -16,6 +17,11 @@ const {
 } = require('../utils');
 
 const path = require('path/posix');
+
+const { 
+    CommonRouter, 
+    AdminRouter 
+} = require('../routers/commonRouter');
 
 class DiscordClient {
     constructor() {
@@ -25,13 +31,7 @@ class DiscordClient {
     }
 
     async init() {
-        async function loadServer() {
-            ///여기서 디비값 들고와야함
-            this.allowServer = [''];
-            //들고와서 allowServer에 담기
-        }
-
-        await loadServer();
+        await this.loadServer();
 
         let commands = await readdir(path.join(process.cwd(), 'src', 'services', 'commands'));
         let commandFiles = _.filter(commands, (command) => {
@@ -70,20 +70,33 @@ class DiscordClient {
         });
         this.Client.on('interactionCreate', async (interaction) => {
             if (!interaction.isCommand()) return;
+
             const {
-                commandName,
-                memberPermissions,
-                member
+                member : {roles}
             } = interaction;
-            console.dir(member.roles, {
-                depth: null
-            })
+            let isAdmin = false;
+            roles.cache.map(role => { if (role.name == '관리자') {isAdmin = true}});
+
+            let router;
+            if(isAdmin) {
+                router = new AdminRouter(interaction);
+            }
+            else {
+                router = new CommonRouter(interaction);
+            }
+            router.init();
         });
     }
 
+    async loadServer() {
+        ///여기서 디비값 들고와야함
+        this.allowServer = [''];
+        //들고와서 allowServer에 담기
+    }
+
     async setCommandManager() {
-        for (let server of this.allowServer) {
-            await this.rest.put(Routes.applicationGuildCommands(this.clientId, server), {
+        for (let serverId of this.allowServer) {
+            await this.rest.put(Routes.applicationGuildCommands(this.clientId, serverId), {
                 body: this.commands
             });
         }

@@ -1,5 +1,12 @@
 const {CommonRouter} = require('./commonRouter');
 
-export class AdminRouter extends CommonRouter {
+module.exports = class AdminRouter{
+    constructor(interaction){
+        this.interaction = interaction;
+        this.commandName = interaction.commandName;
+    }
 
+    async init() {
+        console.dir(this.commandName);
+    }
 }
