@@ -1,0 +1,1 @@
+const discordClient = require("./src/core/discord");
