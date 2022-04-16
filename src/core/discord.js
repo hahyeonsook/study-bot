@@ -18,16 +18,17 @@ const {
 
 const path = require('path/posix');
 
-const { 
-    CommonRouter, 
-    AdminRouter 
-} = require('../routers/commonRouter');
+
 
 class DiscordClient {
     constructor() {
         this.clientId = '';
         this.token = '';
         this.commands = [];
+        this.managerIntents = [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MEMBERS];
+        this.Client = new Client({
+            intents: this.managerIntents
+        });
     }
 
     async init() {
@@ -48,11 +49,6 @@ class DiscordClient {
             version: '9'
         }).setToken(this.token);
 
-        this.managerIntents = [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MEMBERS];
-        this.Client = new Client({
-            intents: this.managerIntents
-        });
-
         try {
             console.dir('커맨드 매니저 설정 시작');
             this.setCommandManager();
@@ -63,29 +59,7 @@ class DiscordClient {
             process.exit(0);
         }
 
-        this.Client.login(this.token);
-
-        this.Client.once('ready', () => {
-            console.dir('로그인 완료');
-        });
-        this.Client.on('interactionCreate', async (interaction) => {
-            if (!interaction.isCommand()) return;
-
-            const {
-                member : {roles}
-            } = interaction;
-            let isAdmin = false;
-            roles.cache.map(role => { if (role.name == '관리자') {isAdmin = true}});
-
-            let router;
-            if(isAdmin) {
-                router = new AdminRouter(interaction);
-            }
-            else {
-                router = new CommonRouter(interaction);
-            }
-            router.init();
-        });
+        await this.Client.login(this.token);
     }
 
     async loadServer() {
@@ -104,8 +78,10 @@ class DiscordClient {
 
 }
 
-
 const discordClient = new DiscordClient();
 discordClient.init();
+discordClient.Client.once('ready', () => {
+    console.dir('로그인 완료');
+});
 
 module.exports = discordClient.Client;
