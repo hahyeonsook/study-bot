@@ -11,6 +11,10 @@
 * Github
 * ~~KakaoTalk~~
 
+## 브랜치 전략
+* Github-flow
+  ![Github-flow](https://www.flagship.io/wp-content/uploads/github-flow-branching-model.jpeg)
+
 ## 기술 스택
 
 ### Server

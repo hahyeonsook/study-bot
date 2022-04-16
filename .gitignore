@@ -131,3 +131,6 @@ dist
 
 # DS STORE (for Mac)
 .DS_STORE
+
+# config
+.config/
