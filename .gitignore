@@ -134,3 +134,6 @@ dist
 
 # config
 .config/
+
+# pakage-lock
+package-lock.json
