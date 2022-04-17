@@ -12,19 +12,17 @@ const {
 
 const _ = require('lodash');
 
-const {
-    readdir
-} = require('../utils');
-
+const ini = require('ini');
 const path = require('path');
 
-
+const utils = require('../utils');
 
 class DiscordClient {
     constructor() {
-        this.clientId = '962267685297725451';
-        this.token = 'OTYyMjY3Njg1Mjk3NzI1NDUx.YlFDng.zd0rtWrA5AcAbwZqPevn_xkbWpM';
+        this.clientId = '';
+        this.token = '';
         this.commands = [];
+
         this.managerIntents = [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MEMBERS];
         this.Client = new Client({
             intents: this.managerIntents
@@ -32,15 +30,19 @@ class DiscordClient {
     }
 
     async init() {
+        const config = ini.parse(await utils.readFile(path.join(process.cwd(), '.config', 'discord.ini'), 'utf-8'));
+        this.clientId = config.clientId;
+        this.token = config.token;
+
         await this.loadServer();
 
-        let commands = await readdir(path.join(process.cwd(), 'src', 'services', 'commands'));
+        let commands = await utils.readdir(path.join(process.cwd(), 'src', 'commands'));
         let commandFiles = _.filter(commands, (command) => {
             return command.endsWith('.js');
         });
 
         for (let commandFile of commandFiles) {
-            const command = require(path.join(process.cwd(), 'src', 'services', 'commands', commandFile));
+            const command = require(path.join(process.cwd(), 'src', 'commands', commandFile));
 
             this.commands.push(command.toJSON());
         }
