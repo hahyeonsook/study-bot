@@ -16,14 +16,14 @@ const {
     readdir
 } = require('../utils');
 
-const path = require('path/posix');
+const path = require('path');
 
 
 
 class DiscordClient {
     constructor() {
-        this.clientId = '';
-        this.token = '';
+        this.clientId = '962267685297725451';
+        this.token = 'OTYyMjY3Njg1Mjk3NzI1NDUx.YlFDng.zd0rtWrA5AcAbwZqPevn_xkbWpM';
         this.commands = [];
         this.managerIntents = [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES, Intents.FLAGS.GUILD_VOICE_STATES, Intents.FLAGS.GUILD_MEMBERS];
         this.Client = new Client({
@@ -64,7 +64,7 @@ class DiscordClient {
 
     async loadServer() {
         ///여기서 디비값 들고와야함
-        this.allowServer = [''];
+        this.allowServer = ['762340278513565746'];
         //들고와서 allowServer에 담기
     }
 
