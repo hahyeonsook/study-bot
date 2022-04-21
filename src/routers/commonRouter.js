@@ -12,7 +12,7 @@ module.exports = class CommonRouter {
             case '':
             break;
             default:
-                const adminRouter = AdminRouter(this.interaction);
+                const adminRouter = new AdminRouter(this.interaction);
                 adminRouter.route();
         }
     }
