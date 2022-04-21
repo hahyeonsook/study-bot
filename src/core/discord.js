@@ -36,15 +36,20 @@ class DiscordClient {
 
         await this.loadServer();
 
-        let commands = await utils.readdir(path.join(process.cwd(), 'src', 'commands'));
-        let commandFiles = _.filter(commands, (command) => {
-            return command.endsWith('.js');
-        });
+        let commandFolders = await utils.readdir(path.join(process.cwd(), 'src', 'commands'));
 
-        for (let commandFile of commandFiles) {
-            const command = require(path.join(process.cwd(), 'src', 'commands', commandFile));
-
-            this.commands.push(command.toJSON());
+        for (let commandFolder of commandFolders) {
+            let commands = await utils.readdir(path.join(process.cwd(), 'src', 'commands', `${commandFolder}`));
+            
+            let commandFiles = _.filter(commands, (command) => {
+                return command.endsWith('.js');
+            });
+    
+            for (let commandFile of commandFiles) {
+                const command = require(path.join(process.cwd(), 'src', 'commands', `${commandFolder}`, commandFile));
+    
+                this.commands.push(command.toJSON());
+            }
         }
 
         this.rest = new REST({
