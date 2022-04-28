@@ -14,8 +14,15 @@ module.exports = class AdminRouter{
             case '사용자삭제':
                 user.exec(this.interaction);
             break;
+            case '스터디추가':
             case '스터디수정':
+            case '스터디삭제':
+            case '스터디멤버추가':
+            case '스터디멤버삭제':
                 study.exec(this.interaction);
+            break;
+            default:
+                this.interaction.reply('없는 명령어입니다.');
             break;
         }
     }
