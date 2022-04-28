@@ -8,7 +8,8 @@ const userSchema = new mongoose.Schema({
     },
     discord: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     github : {
         type: String,
@@ -17,6 +18,10 @@ const userSchema = new mongoose.Schema({
     notion : {
         type: String,
         required: true
+    },
+    active: {
+        type: Boolean,
+        default: true
     }
 },
 {
@@ -25,6 +30,3 @@ const userSchema = new mongoose.Schema({
 
 // Create Model & Export
 module.exports = mongoose.model('User', userSchema);
-
-//TODO STATUS 추가하기
-//TODO user name unique 속성 추가하기

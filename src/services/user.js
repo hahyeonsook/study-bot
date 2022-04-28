@@ -6,6 +6,7 @@ async function exec (interaction) {
     const name = interaction.options.getString('이름');
     const github = interaction.options.getString('깃허브');
     const notion = interaction.options.getString('노션');
+    const active = interaction.options.getBoolean('활성');
 
     let message = '';
 
