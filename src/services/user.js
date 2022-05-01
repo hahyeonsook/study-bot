@@ -21,7 +21,7 @@ async function exec (interaction) {
         break;
         case '수정':
             try {
-                await User.findOneAndUpdate({name: name}, {$set:{github: github, discord: '1234', notion: notion}});
+                await User.findOneAndUpdate({name: name}, {$set:{github: github, discord: '1234', notion: notion, active: active}});
                 message = `${name} 수정을 성공했습니다.`;
             } catch(err) {
                 console.dir(err);
